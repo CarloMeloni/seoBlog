@@ -1,6 +1,8 @@
 import {useState} from 'react';
 import { APP_NAME } from '../config';
 import Link from 'next/link';
+import Router from 'next/router';
+import { signout, isAuth } from '../actions/auth';
 
 import {
   Collapse,
@@ -28,25 +30,35 @@ const Header = () => {
         <div>
           <Navbar color="light" light expand="md">
               <Link href="/">
-                <NavLink className="font-weight-bold">{APP_NAME}</NavLink>
+                <NavLink className="font-weight-bold" style={{ color: '#333333' }}>{APP_NAME}</NavLink>
               </Link>
             <NavbarToggler onClick={toggle} />
             <Collapse isOpen={isOpen} navbar>
               <Nav className="mr-auto" navbar>
+                {!isAuth() && (
+                  <React.Fragment>
+                    <NavItem>
+                      <Link href='/signin'>
+                            <NavLink style={{ cursor: 'pointer'}}>
+                                Signin
+                            </NavLink>
+                        </Link>
+                    </NavItem>
+                    <NavItem>
+                      <Link href='/signup'>
+                            <NavLink style={{ cursor: 'pointer'}}>
+                                Signup
+                            </NavLink>
+                        </Link>
+                    </NavItem>
+                  </React.Fragment>
+                )}
+                {isAuth() && 
                 <NavItem>
-                   <Link href='/signin'>
-                        <NavLink>
-                            signin
+                        <NavLink style={{ cursor: 'pointer'}} onClick={() => { signout(() => { Router.replace(`/signin`) }); }}>
+                            Signout
                         </NavLink>
-                    </Link>
-                </NavItem>
-                <NavItem>
-                   <Link href='/signup'>
-                        <NavLink>
-                            signup
-                        </NavLink>
-                    </Link>
-                </NavItem>
+                </NavItem>}
               </Nav>
             </Collapse>
           </Navbar>
